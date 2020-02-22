@@ -91,6 +91,41 @@ def depthFirstSearch(problem):
     print("Start:", problem.getStartState())
     print("Is the start a goal?", problem.isGoalState(problem.getStartState()))
     print("Start's successors:", problem.getSuccessors(problem.getStartState()))
+    from game import Directions
+    s = Directions.SOUTH
+    w = Directions.WEST
+    e = Directions.EAST
+    n = Directions.NORTH
+
+    start = problem.getStartState()
+    open_stack = util.Stack()
+    closed_stack = util.Stack()
+    # print(start)
+    open_stack.push(start)
+    parents = {}
+    path = []
+    while (open_stack.isEmpty() != True):
+
+        s = open_stack.pop()
+        if problem.isGoalState(s):
+            goal = s
+            break;
+
+        neighbors = problem.getSuccessors(s)
+
+        closed_stack.push(s)
+
+        for i in range(len(neighbors)):
+
+            parents[neighbors[i][0]] = s
+            if (neighbors[i][0] not in closed_stack.list and neighbors[i][0] not in open_stack.list):
+                open_stack.push(neighbors[i][0])
+                path.append(neighbors[i][1])
+
+    print(goal)
+    print(path)
+    "*** YOUR CODE HERE ***"
+    return path
     util.raiseNotDefined()
 
 def breadthFirstSearch(problem):

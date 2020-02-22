@@ -150,6 +150,47 @@ def depthFirstSearch(problem):
 def breadthFirstSearch(problem):
     """Search the shallowest nodes in the search tree first."""
     "*** YOUR CODE HERE ***"
+    start = problem.getStartState()
+    open_queue = util.Queue()
+    closed_queue = util.Queue()
+    # print(start)
+    open_queue.push(start)
+    parent = {}
+    path = []
+    path_stack = util.Stack()
+    flag = False
+    while (open_queue.isEmpty() != True):
+
+        s = open_queue.pop()
+
+        if problem.isGoalState(s):
+            goal = s
+            # path.append(pathnode)
+            break;
+
+        neighbors = problem.getSuccessors(s)
+
+        closed_queue.push(s)
+
+        # if(flag == True):
+        #     pathnode = path_stack.pop()
+        #     path.append(pathnode)
+        # flag = True
+        for i in range(len(neighbors)):
+
+            if (neighbors[i][0] not in closed_queue.list and neighbors[i][0] not in open_queue.list):
+                open_queue.push(neighbors[i][0])
+                parent[neighbors[i][0]] = (s, neighbors[i][1])
+                # path_stack.push(neighbors[i][1])
+
+    while (goal != start):
+        temp = parent[goal]
+        path.append(temp[1])
+        goal = temp[0]
+
+    path.reverse()
+
+    return path
     util.raiseNotDefined()
 
 

@@ -19,6 +19,7 @@ Pacman agents (in searchAgents.py).
 
 import util
 
+
 class SearchProblem:
     """
     This class outlines the structure of a search problem, but doesn't implement
@@ -70,7 +71,8 @@ def tinyMazeSearch(problem):
     from game import Directions
     s = Directions.SOUTH
     w = Directions.WEST
-    return  [s, s, w, s, w, w, s, w]
+    return [s, s, w, s, w, w, s, w]
+
 
 def depthFirstSearch(problem):
     """
@@ -91,6 +93,7 @@ def depthFirstSearch(problem):
     print("Start:", problem.getStartState())
     print("Is the start a goal?", problem.isGoalState(problem.getStartState()))
     print("Start's successors:", problem.getSuccessors(problem.getStartState()))
+
     from game import Directions
     s = Directions.SOUTH
     w = Directions.WEST
@@ -102,41 +105,59 @@ def depthFirstSearch(problem):
     closed_stack = util.Stack()
     # print(start)
     open_stack.push(start)
-    parents = {}
+    parent = {}
     path = []
+    path_stack = util.Stack()
+    flag = False
     while (open_stack.isEmpty() != True):
 
         s = open_stack.pop()
+
         if problem.isGoalState(s):
             goal = s
+            # path.append(pathnode)
             break;
 
         neighbors = problem.getSuccessors(s)
-
         closed_stack.push(s)
 
+        # if(flag == True):
+        #     pathnode = path_stack.pop()
+        #     path.append(pathnode)
+        # flag = True
         for i in range(len(neighbors)):
 
-            parents[neighbors[i][0]] = s
             if (neighbors[i][0] not in closed_stack.list and neighbors[i][0] not in open_stack.list):
                 open_stack.push(neighbors[i][0])
-                path.append(neighbors[i][1])
+                parent[neighbors[i][0]] = (s, neighbors[i][1])
+                # path_stack.push(neighbors[i][1])
 
-    print(goal)
-    print(path)
-    "*** YOUR CODE HERE ***"
+
+    while (goal != start):
+
+        temp = parent[goal]
+        path.append(temp[1])
+        goal = temp[0]
+
+    path.reverse()
+
     return path
+
+    "*** YOUR CODE HERE ***"
     util.raiseNotDefined()
+
 
 def breadthFirstSearch(problem):
     """Search the shallowest nodes in the search tree first."""
     "*** YOUR CODE HERE ***"
     util.raiseNotDefined()
 
+
 def uniformCostSearch(problem):
     """Search the node of least total cost first."""
     "*** YOUR CODE HERE ***"
     util.raiseNotDefined()
+
 
 def nullHeuristic(state, problem=None):
     """
@@ -144,6 +165,7 @@ def nullHeuristic(state, problem=None):
     goal in the provided SearchProblem.  This heuristic is trivial.
     """
     return 0
+
 
 def aStarSearch(problem, heuristic=nullHeuristic):
     """Search the node that has the lowest combined cost and heuristic first."""

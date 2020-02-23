@@ -90,9 +90,9 @@ def depthFirstSearch(problem):
     """
     "*** YOUR CODE HERE ***"
 
-    print("Start:", problem.getStartState())
-    print("Is the start a goal?", problem.isGoalState(problem.getStartState()))
-    print("Start's successors:", problem.getSuccessors(problem.getStartState()))
+    #print("Start:", problem.getStartState())
+    #print("Is the start a goal?", problem.isGoalState(problem.getStartState()))
+    #print("Start's successors:", problem.getSuccessors(problem.getStartState()))
 
     from game import Directions
     s = Directions.SOUTH
@@ -190,6 +190,7 @@ def breadthFirstSearch(problem):
 
     path.reverse()
 
+
     return path
     util.raiseNotDefined()
 
@@ -197,6 +198,29 @@ def breadthFirstSearch(problem):
 def uniformCostSearch(problem):
     """Search the node of least total cost first."""
     "*** YOUR CODE HERE ***"
+
+    start = problem.getStartState()
+    pathList = []
+    states = util.PriorityQueue()
+    states.push((start, pathList), 0)
+
+    visitedState = []
+    
+    while not states.isEmpty():
+        state, path = states.pop()
+        if problem.isGoalState(state):
+            return path
+        if state not in visitedState:
+            successors = problem.getSuccessors(state)
+            for succ in successors:
+                newState = succ[0]
+                if newState not in visitedState:
+                    directions = succ[1]
+                    newCost , pathList = path + [directions], path + [directions]
+                    states.push((newState, pathList), problem.getCostOfActions(newCost))
+        visitedState.append(state)
+    return path
+
     util.raiseNotDefined()
 
 

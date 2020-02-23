@@ -101,17 +101,17 @@ def depthFirstSearch(problem):
     n = Directions.NORTH
 
     start = problem.getStartState()
-    open_stack = util.Stack()
-    closed_stack = util.Stack()
+    openStack = util.Stack()
+    closedStack = util.Stack()
     # print(start)
-    open_stack.push(start)
+    openStack.push(start)
     parent = {}
     path = []
     path_stack = util.Stack()
     flag = False
-    while (open_stack.isEmpty() != True):
+    while (openStack.isEmpty() != True):
 
-        s = open_stack.pop()
+        s = openStack.pop()
 
         if problem.isGoalState(s):
             goal = s
@@ -119,7 +119,7 @@ def depthFirstSearch(problem):
             break;
 
         neighbors = problem.getSuccessors(s)
-        closed_stack.push(s)
+        closedStack.push(s)
 
         # if(flag == True):
         #     pathnode = path_stack.pop()
@@ -127,8 +127,8 @@ def depthFirstSearch(problem):
         # flag = True
         for i in range(len(neighbors)):
 
-            if (neighbors[i][0] not in closed_stack.list and neighbors[i][0] not in open_stack.list):
-                open_stack.push(neighbors[i][0])
+            if (neighbors[i][0] not in closedStack.list and neighbors[i][0] not in openStack.list):
+                openStack.push(neighbors[i][0])
                 parent[neighbors[i][0]] = (s, neighbors[i][1])
                 # path_stack.push(neighbors[i][1])
 
@@ -151,17 +151,17 @@ def breadthFirstSearch(problem):
     """Search the shallowest nodes in the search tree first."""
     "*** YOUR CODE HERE ***"
     start = problem.getStartState()
-    open_queue = util.Queue()
-    closed_queue = util.Queue()
+    openQueue = util.Queue()
+    closedQueue = util.Queue()
     # print(start)
-    open_queue.push(start)
+    openQueue.push(start)
     parent = {}
     path = []
     path_stack = util.Stack()
     flag = False
-    while (open_queue.isEmpty() != True):
+    while (openQueue.isEmpty() != True):
 
-        s = open_queue.pop()
+        s = openQueue.pop()
 
         if problem.isGoalState(s):
             goal = s
@@ -170,7 +170,7 @@ def breadthFirstSearch(problem):
 
         neighbors = problem.getSuccessors(s)
 
-        closed_queue.push(s)
+        closedQueue.push(s)
 
         # if(flag == True):
         #     pathnode = path_stack.pop()
@@ -178,8 +178,8 @@ def breadthFirstSearch(problem):
         # flag = True
         for i in range(len(neighbors)):
 
-            if (neighbors[i][0] not in closed_queue.list and neighbors[i][0] not in open_queue.list):
-                open_queue.push(neighbors[i][0])
+            if (neighbors[i][0] not in closedQueue.list and neighbors[i][0] not in openQueue.list):
+                openQueue.push(neighbors[i][0])
                 parent[neighbors[i][0]] = (s, neighbors[i][1])
                 # path_stack.push(neighbors[i][1])
 

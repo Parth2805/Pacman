@@ -121,10 +121,7 @@ def depthFirstSearch(problem):
         neighbors = problem.getSuccessors(s)
         closedStack.push(s)
 
-        # if(flag == True):
-        #     pathnode = path_stack.pop()
-        #     path.append(pathnode)
-        # flag = True
+
         for i in range(len(neighbors)):
 
             if (neighbors[i][0] not in closedStack.list and neighbors[i][0] not in openStack.list):
@@ -150,49 +147,31 @@ def depthFirstSearch(problem):
 def breadthFirstSearch(problem):
     """Search the shallowest nodes in the search tree first."""
     "*** YOUR CODE HERE ***"
+
     start = problem.getStartState()
-    openQueue = util.Queue()
-    closedQueue = util.Queue()
-    # print(start)
-    openQueue.push(start)
-    parent = {}
-    path = []
-    path_stack = util.Stack()
-    flag = False
-    while (openQueue.isEmpty() != True):
+    states = util.Queue()
+    visited = []
+    pathList = []
+    states.push((start, pathList))
 
-        s = openQueue.pop()
+    while not states.isEmpty():
+        state, path = states.pop()
+        visited.append(state)
+        if problem.isGoalState(state):
+            return path
 
-        if problem.isGoalState(s):
-            goal = s
-            # path.append(pathnode)
-            break;
+        successors = problem.getSuccessors(state)
 
-        neighbors = problem.getSuccessors(s)
-
-        closedQueue.push(s)
-
-        # if(flag == True):
-        #     pathnode = path_stack.pop()
-        #     path.append(pathnode)
-        # flag = True
-        for i in range(len(neighbors)):
-
-            if (neighbors[i][0] not in closedQueue.list and neighbors[i][0] not in openQueue.list):
-                openQueue.push(neighbors[i][0])
-                parent[neighbors[i][0]] = (s, neighbors[i][1])
-                # path_stack.push(neighbors[i][1])
-
-    while (goal != start):
-        temp = parent[goal]
-        path.append(temp[1])
-        goal = temp[0]
-
-    path.reverse()
-
-
+        for succ in successors:
+            newState = succ[0]
+            if succ not in visited:
+                direction = succ[1]
+                newPath = path + [direction]
+                states.push((newState, newPath))
     return path
-    util.raiseNotDefined()
+
+
+    #util.raiseNotDefined()
 
 
 def uniformCostSearch(problem):

@@ -188,32 +188,61 @@ def breadthFirstSearch(problem):
     #
     # path.reverse()
 
-    start = problem.getStartState()
-    pathList = []
-    states = util.Queue()
-    states.push((start, pathList))
-
-    visitedState = []
-    while not states.isEmpty():
-        state, path = states.pop()
-        if problem.isGoalState(state):
-            break
-            return path
-        if state not in visitedState:
-            successors = problem.getSuccessors(state)
-            for succ in successors:
-                newState = succ[0]
-                if newState not in visitedState:
-                    directions = succ[1]
-                    pathList = path + [directions]
-                    states.push((newState, pathList))
-        visitedState.append(state)
-
-    print(path)
-    return path
+    # start = problem.getStartState()
+    # pathList = []
+    # states = util.Queue()
+    # states.push((start, pathList))
+    #
+    # visitedState = util.Queue()
+    # while not states.isEmpty():
+    #     currentState = states.pop()
+    #     if problem.isGoalState(currentState[0]):
+    #         break
+    #         return path
+    #     if currentState not in visitedState.list and currentState not in states.list:
+    #         state , path = currentState
+    #         successors = problem.getSuccessors(state)
+    #         for succ in successors:
+    #             newState = succ[0]
+    #             if newState not in visitedState.list:
+    #                 directions = succ[1]
+    #                 pathList = path + [directions]
+    #                 states.push((newState, pathList))
+    #     visitedState.push((state , pathList))
+    #
+    # print(path)
+    # return path
 
     # return path
 
+    start = problem.getStartState()
+    openQueue = util.Queue()
+    closedQueue = util.Queue()
+    pathList=[]
+    openQueue.push((start,[]))
+
+    while not openQueue.isEmpty():
+
+        s , path = openQueue.pop()
+
+        if problem.isGoalState(s):
+            break
+            return path
+
+        closedQueue.push(s)
+
+        successors = problem.getSuccessors(s)
+
+        for succ in successors:
+            state = succ[0]
+            directions = succ[1]
+
+            if state not in openQueue.list and state not in closedQueue.list:
+                pathList = path + [directions]
+                openQueue.push((state,pathList))
+    print(closedQueue.list)
+    print(path)
+    return path
     util.raiseNotDefined()
 
 

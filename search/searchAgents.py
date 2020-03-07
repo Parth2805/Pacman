@@ -297,7 +297,6 @@ class CornersProblem(search.SearchProblem):
         self._expanded = 0  # DO NOT CHANGE; Number of search nodes expanded
         # Please add any code here which you would like to use
         # in initializing the problem
-        self.visited = []
         "*** YOUR CODE HERE ***"
 
     def getStartState(self):
@@ -306,10 +305,8 @@ class CornersProblem(search.SearchProblem):
         space)
         """
         "*** YOUR CODE HERE ***"
-
-        cornersList = []
         print(self.startingPosition)
-        return (self.startingPosition,cornersList)
+        return (self.startingPosition,[])
         util.raiseNotDefined()
 
     def isGoalState(self, state):
@@ -321,7 +318,7 @@ class CornersProblem(search.SearchProblem):
         #     return True
         # else:
         #     return False
-
+        # print(state)
         if len(state[1])==4:
             return True
         else:
@@ -348,7 +345,7 @@ class CornersProblem(search.SearchProblem):
             #   dx, dy = Actions.directionToVector(action)
             #   nextx, nexty = int(x + dx), int(y + dy)
             #   hitsWall = self.walls[nextx][nexty]
-
+        # print(state[0],state[1])
         for action in [Directions.NORTH, Directions.SOUTH, Directions.EAST, Directions.WEST]:
             x, y = state[0]
             dx, dy = Actions.directionToVector(action)

@@ -90,9 +90,9 @@ def depthFirstSearch(problem):
     """
     "*** YOUR CODE HERE ***"
 
-    #print("Start:", problem.getStartState())
-    #print("Is the start a goal?", problem.isGoalState(problem.getStartState()))
-    #print("Start's successors:", problem.getSuccessors(problem.getStartState()))
+    # print("Start:", problem.getStartState())
+    # print("Is the start a goal?", problem.isGoalState(problem.getStartState()))
+    # print("Start's successors:", problem.getSuccessors(problem.getStartState()))
 
     from game import Directions
     s = Directions.SOUTH
@@ -132,9 +132,7 @@ def depthFirstSearch(problem):
                 parent[neighbors[i][0]] = (s, neighbors[i][1])
                 # path_stack.push(neighbors[i][1])
 
-
     while (goal != start):
-
         temp = parent[goal]
         path.append(temp[1])
         goal = temp[0]
@@ -150,48 +148,72 @@ def depthFirstSearch(problem):
 def breadthFirstSearch(problem):
     """Search the shallowest nodes in the search tree first."""
     "*** YOUR CODE HERE ***"
+    # start = problem.getStartState()
+    # openQueue = util.Queue()
+    # closedQueue = util.Queue()
+    # # print(start)
+    # pathList = []
+    # openQueue.push((start, pathList))
+    # parent = {}
+    # path_stack = util.Stack()
+    # flag = False
+    # while (openQueue.isEmpty() != True):
+    #
+    #     s, path = openQueue.pop()
+    #
+    #     if problem.isGoalState(s):
+    #         goal = s
+    #         # path.append(pathnode)
+    #         return path
+    #         break;
+    #
+    #     neighbors = problem.getSuccessors(s)
+    #
+    #     closedQueue.push(s)
+    #
+    #     # if(flag == True):
+    #     #     pathnode = path_stack.pop()
+    #     #     path.append(pathnode)
+    #     # flag = True
+    #     for i in range(len(neighbors)):
+    #
+    #         if (neighbors[i][0] not in closedQueue.list and neighbors[i][0] not in openQueue.list):
+    #             openQueue.push((neighbors[i][0], path.append(neighbors[i][1])))
+    #             parent[neighbors[i][0]] = (s, neighbors[i][1])
+
+    # while (goal != start):
+    #     temp = parent[goal]
+    #     path.append(temp[1])
+    #     goal = temp[0]
+    #
+    # path.reverse()
+
     start = problem.getStartState()
-    openQueue = util.Queue()
-    closedQueue = util.Queue()
-    # print(start)
-    openQueue.push(start)
-    parent = {}
-    path = []
-    path_stack = util.Stack()
-    flag = False
-    while (openQueue.isEmpty() != True):
+    pathList = []
+    states = util.Queue()
+    states.push((start, pathList))
 
-        s = openQueue.pop()
+    visitedState = []
+    while not states.isEmpty():
+        state, path = states.pop()
+        if problem.isGoalState(state):
+            break
+            return path
+        if state not in visitedState:
+            successors = problem.getSuccessors(state)
+            for succ in successors:
+                newState = succ[0]
+                if newState not in visitedState:
+                    directions = succ[1]
+                    pathList = path + [directions]
+                    states.push((newState, pathList))
+        visitedState.append(state)
 
-        if problem.isGoalState(s):
-            goal = s
-            # path.append(pathnode)
-            break;
-
-        neighbors = problem.getSuccessors(s)
-
-        closedQueue.push(s)
-
-        # if(flag == True):
-        #     pathnode = path_stack.pop()
-        #     path.append(pathnode)
-        # flag = True
-        for i in range(len(neighbors)):
-
-            if (neighbors[i][0] not in closedQueue.list and neighbors[i][0] not in openQueue.list):
-                openQueue.push(neighbors[i][0])
-                parent[neighbors[i][0]] = (s, neighbors[i][1])
-                # path_stack.push(neighbors[i][1])
-
-    while (goal != start):
-        temp = parent[goal]
-        path.append(temp[1])
-        goal = temp[0]
-
-    path.reverse()
-
-
+    print(path)
     return path
+
+    # return path
+
     util.raiseNotDefined()
 
 
@@ -205,7 +227,7 @@ def uniformCostSearch(problem):
     states.push((start, pathList), 0)
 
     visitedState = []
-    
+
     while not states.isEmpty():
         state, path = states.pop()
         if problem.isGoalState(state):
@@ -216,7 +238,7 @@ def uniformCostSearch(problem):
                 newState = succ[0]
                 if newState not in visitedState:
                     directions = succ[1]
-                    newCost , pathList = path + [directions], path + [directions]
+                    newCost, pathList = path + [directions], path + [directions]
                     states.push((newState, pathList), problem.getCostOfActions(newCost))
         visitedState.append(state)
     return path
@@ -253,7 +275,7 @@ def aStarSearch(problem, heuristic=nullHeuristic):
                 if newState not in visitedState:
                     directions = succ[1]
                     newCost, pathList = path + [directions], path + [directions]
-                    newCost = problem.getCostOfActions(newCost) + heuristic(newState,problem)
+                    newCost = problem.getCostOfActions(newCost) + heuristic(newState, problem)
                     states.push((newState, pathList), newCost)
         visitedState.append(state)
     return path

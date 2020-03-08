@@ -375,9 +375,7 @@ def cornersHeuristic(state, problem):
     currentPosition = state[0]
     cornersVisitedList = state[1]
     corners = problem.corners
-    top, right = problem.walls.height - 2, problem.walls.width - 2
     notVisitedCorners = []
-
     totalCost = 0
 
     for corner in corners:
@@ -385,18 +383,17 @@ def cornersHeuristic(state, problem):
             notVisitedCorners.append(corner)
 
     distances = []
-    dist = 0
+    cornerDict = {}
     while len(notVisitedCorners) > 0:
         for corner in notVisitedCorners:
-            dist = manhattanHeuristic(currentPosition, corner)
+            dist = util.manhattanDistance(currentPosition, corner)
             distances.append(dist)
+            cornerDict[corner] = dist
 
-        minDist = min(distances)
-        totalCost += minDist
-        indexOfMinDistance = distances.index(minDist)
-        currentPosition = notVisitedCorners[indexOfMinDistance]
-        del notVisitedCorners[indexOfMinDistance]
-
+        key_min = min(cornerDict.keys(), key=(lambda k: cornerDict[k]))
+        totalCost += cornerDict[key_min]
+        notVisitedCorners.remove(key_min)
+        del cornerDict[key_min]
     return totalCost
 
 class AStarCornersAgent(SearchAgent):

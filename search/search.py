@@ -85,62 +85,34 @@ def depthFirstSearch(problem):
     understand the search problem that is being passed in:
 
     print("Start:", problem.getStartState())
-    print("Is the start a goal?", problem.isGoalState(problem.getStartState()))
+    print("Is the initialState a goal?", problem.isGoalState(problem.getStartState()))
     print("Start's successors:", problem.getSuccessors(problem.getStartState()))
     """
     "*** YOUR CODE HERE ***"
 
-    #print("Start:", problem.getStartState())
-    #print("Is the start a goal?", problem.isGoalState(problem.getStartState()))
-    #print("Start's successors:", problem.getSuccessors(problem.getStartState()))
+    # print("Start:", problem.getStartState())
+    # print("Is the initialState a goal?", problem.isGoalState(problem.getStartState()))
+    # print("Start's successors:", problem.getSuccessors(problem.getStartState()))
 
-    from game import Directions
-    s = Directions.SOUTH
-    w = Directions.WEST
-    e = Directions.EAST
-    n = Directions.NORTH
+    initialState = problem.getStartState()
+    notVisitedStates = util.Stack()
+    visitedStates = [initialState]
+    pathList = []
+    notVisitedStates.push((initialState, pathList))
 
-    start = problem.getStartState()
-    openStack = util.Stack()
-    closedStack = util.Stack()
-    # print(start)
-    openStack.push(start)
-    parent = {}
-    path = []
-    path_stack = util.Stack()
-    flag = False
-    while (openStack.isEmpty() != True):
+    while not notVisitedStates.isEmpty():
+        currentState, path = notVisitedStates.pop()
+        if problem.isGoalState(currentState):
+            return path
 
-        s = openStack.pop()
-
-        if problem.isGoalState(s):
-            goal = s
-            # path.append(pathnode)
-            break;
-
-        neighbors = problem.getSuccessors(s)
-        closedStack.push(s)
-
-        # if(flag == True):
-        #     pathnode = path_stack.pop()
-        #     path.append(pathnode)
-        # flag = True
-        for i in range(len(neighbors)):
-
-            if (neighbors[i][0] not in closedStack.list and neighbors[i][0] not in openStack.list):
-                openStack.push(neighbors[i][0])
-                parent[neighbors[i][0]] = (s, neighbors[i][1])
-                # path_stack.push(neighbors[i][1])
-
-
-    while (goal != start):
-
-        temp = parent[goal]
-        path.append(temp[1])
-        goal = temp[0]
-
-    path.reverse()
-
+        successors = problem.getSuccessors(currentState)
+        for succ in successors:
+            newState = succ[0]
+            if newState not in visitedStates:
+                visitedStates.append(currentState)
+                direction = succ[1]
+                newPath = path + [direction]
+                notVisitedStates.push((newState, newPath))
     return path
 
     "*** YOUR CODE HERE ***"
@@ -150,64 +122,40 @@ def depthFirstSearch(problem):
 def breadthFirstSearch(problem):
     """Search the shallowest nodes in the search tree first."""
     "*** YOUR CODE HERE ***"
-    start = problem.getStartState()
-    openQueue = util.Queue()
-    closedQueue = util.Queue()
-    # print(start)
-    openQueue.push(start)
-    parent = {}
-    path = []
-    path_stack = util.Stack()
-    flag = False
-    while (openQueue.isEmpty() != True):
-
-        s = openQueue.pop()
-
-        if problem.isGoalState(s):
-            goal = s
-            # path.append(pathnode)
-            break;
-
-        neighbors = problem.getSuccessors(s)
-
-        closedQueue.push(s)
-
-        # if(flag == True):
-        #     pathnode = path_stack.pop()
-        #     path.append(pathnode)
-        # flag = True
-        for i in range(len(neighbors)):
-
-            if (neighbors[i][0] not in closedQueue.list and neighbors[i][0] not in openQueue.list):
-                openQueue.push(neighbors[i][0])
-                parent[neighbors[i][0]] = (s, neighbors[i][1])
-                # path_stack.push(neighbors[i][1])
-
-    while (goal != start):
-        temp = parent[goal]
-        path.append(temp[1])
-        goal = temp[0]
-
-    path.reverse()
-
-
+    initialState = problem.getStartState()
+    visitedState = [initialState]
+    notVisitedStates = util.Queue()
+    pathList = []
+    notVisitedStates.push((initialState, pathList))
+    while not notVisitedStates.isEmpty():
+        state, path = notVisitedStates.pop()
+        if problem.isGoalState(state):
+            return path
+        successor = problem.getSuccessors(state)
+        for succ in successor:
+            newState = succ[0]
+            if not newState in visitedState:
+                visitedState.append(newState)
+                direction = succ[1]
+                newPath = path + [direction]
+                notVisitedStates.push((newState, newPath))
     return path
-    util.raiseNotDefined()
+
+    # util.raiseNotDefined()
 
 
 def uniformCostSearch(problem):
     """Search the node of least total cost first."""
     "*** YOUR CODE HERE ***"
 
-    start = problem.getStartState()
-    pathList = []
-    states = util.PriorityQueue()
-    states.push((start, pathList), 0)
-
+    initialState = problem.getStartState()
     visitedState = []
-    
-    while not states.isEmpty():
-        state, path = states.pop()
+    pathList = []
+    notVisitedStates = util.PriorityQueue()
+    notVisitedStates.push((initialState, pathList), 0)
+
+    while not notVisitedStates.isEmpty():
+        state, path = notVisitedStates.pop()
         if problem.isGoalState(state):
             return path
         if state not in visitedState:
@@ -216,8 +164,8 @@ def uniformCostSearch(problem):
                 newState = succ[0]
                 if newState not in visitedState:
                     directions = succ[1]
-                    newCost , pathList = path + [directions], path + [directions]
-                    states.push((newState, pathList), problem.getCostOfActions(newCost))
+                    newCost, pathList = path + [directions], path + [directions]
+                    notVisitedStates.push((newState, pathList), problem.getCostOfActions(newCost))
         visitedState.append(state)
     return path
 
@@ -235,15 +183,15 @@ def nullHeuristic(state, problem=None):
 def aStarSearch(problem, heuristic=nullHeuristic):
     """Search the node that has the lowest combined cost and heuristic first."""
     "*** YOUR CODE HERE ***"
-    start = problem.getStartState()
+    initialState = problem.getStartState()
     pathList = []
-    states = util.PriorityQueue()
-    states.push((start, pathList), 0)
+    notVisitedStates = util.PriorityQueue()
+    notVisitedStates.push((initialState, pathList), 0)
 
     visitedState = []
 
-    while not states.isEmpty():
-        state, path = states.pop()
+    while not notVisitedStates.isEmpty():
+        state, path = notVisitedStates.pop()
         if problem.isGoalState(state):
             return path
         if state not in visitedState:
@@ -253,8 +201,8 @@ def aStarSearch(problem, heuristic=nullHeuristic):
                 if newState not in visitedState:
                     directions = succ[1]
                     newCost, pathList = path + [directions], path + [directions]
-                    newCost = problem.getCostOfActions(newCost) + heuristic(newState,problem)
-                    states.push((newState, pathList), newCost)
+                    newCost = problem.getCostOfActions(newCost) + heuristic(newState, problem)
+                    notVisitedStates.push((newState, pathList), newCost)
         visitedState.append(state)
     return path
 

@@ -94,47 +94,25 @@ def depthFirstSearch(problem):
     # print("Is the start a goal?", problem.isGoalState(problem.getStartState()))
     # print("Start's successors:", problem.getSuccessors(problem.getStartState()))
 
-    from game import Directions
-    s = Directions.SOUTH
-    w = Directions.WEST
-    e = Directions.EAST
-    n = Directions.NORTH
-
     start = problem.getStartState()
-    openStack = util.Stack()
-    closedStack = util.Stack()
-    # print(start)
-    openStack.push(start)
-    parent = {}
-    path = []
-    path_stack = util.Stack()
-    flag = False
-    while (openStack.isEmpty() != True):
+    notVisitedStates = util.Stack()
+    visitedStates = [start]
+    pathList = []
+    notVisitedStates.push((start, pathList))
 
-        s = openStack.pop()
+    while not notVisitedStates.isEmpty():
+        currentState, path = notVisitedStates.pop()
+        visitedStates.append(currentState)
+        if problem.isGoalState(currentState):
+            return path
 
-        if problem.isGoalState(s):
-            goal = s
-            # path.append(pathnode)
-            break;
-
-        neighbors = problem.getSuccessors(s)
-        closedStack.push(s)
-
-        for i in range(len(neighbors)):
-
-            if (neighbors[i][0] not in closedStack.list and neighbors[i][0] not in openStack.list):
-                openStack.push(neighbors[i][0])
-                parent[neighbors[i][0]] = (s, neighbors[i][1])
-                # path_stack.push(neighbors[i][1])
-
-    while (goal != start):
-        temp = parent[goal]
-        path.append(temp[1])
-        goal = temp[0]
-
-    path.reverse()
-
+        successors = problem.getSuccessors(currentState)
+        for succ in successors:
+            newState = succ[0]
+            if newState not in visitedStates:
+                direction = succ[1]
+                newPath = path + [direction]
+                notVisitedStates.push((newState, newPath))
     return path
 
     "*** YOUR CODE HERE ***"
@@ -145,8 +123,7 @@ def breadthFirstSearch(problem):
     """Search the shallowest nodes in the search tree first."""
     "*** YOUR CODE HERE ***"
     start = problem.getStartState()
-    visitedState = []
-    visitedState.append(start)
+    visitedState = [start]
     states = util.Queue()
     pathList = []
     states.push((start, pathList))
@@ -158,11 +135,10 @@ def breadthFirstSearch(problem):
         for succ in successor:
             newState = succ[0]
             if not newState in visitedState:
-                direction = succ[1]
                 visitedState.append(newState)
+                direction = succ[1]
                 newPath = path + [direction]
                 states.push((newState, newPath))
-
     return path
 
     # util.raiseNotDefined()
@@ -173,11 +149,10 @@ def uniformCostSearch(problem):
     "*** YOUR CODE HERE ***"
 
     start = problem.getStartState()
+    visitedState = []
     pathList = []
     states = util.PriorityQueue()
     states.push((start, pathList), 0)
-
-    visitedState = []
 
     while not states.isEmpty():
         state, path = states.pop()

@@ -390,10 +390,12 @@ def cornersHeuristic(state, problem):
             distances.append(dist)
             cornerDict[corner] = dist
 
-        key_min = min(cornerDict.keys(), key=(lambda k: cornerDict[k]))
-        totalCost += cornerDict[key_min]
-        notVisitedCorners.remove(key_min)
-        del cornerDict[key_min]
+        print(cornerDict)
+        cornerWithMinDist = min(cornerDict.keys(), key=(lambda k: cornerDict[k]))
+        currentPosition = cornerWithMinDist
+        totalCost += cornerDict[cornerWithMinDist]
+        notVisitedCorners.remove(cornerWithMinDist)
+        del cornerDict[cornerWithMinDist]
     return totalCost
 
 class AStarCornersAgent(SearchAgent):

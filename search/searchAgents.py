@@ -490,7 +490,30 @@ def foodHeuristic(state, problem):
     """
     position, foodGrid = state
     "*** YOUR CODE HERE ***"
-    return 0
+    currentPosition = state[0]
+    foodGrid = state[1]
+    print(foodGrid)
+    notVisitedFoodStates = []
+    foodStateDict = {}
+    totalCost = 0
+
+    for i in range(0, 5):
+        for j in range(0, 5):
+            if foodGrid[i][j]:
+                notVisitedFoodStates.append(foodGrid[i][j])
+
+    while len(notVisitedFoodStates) > 0:
+        for state in notVisitedFoodStates:
+            dist = util.manhattanDistance(currentPosition, state)
+            foodStateDict[state] = dist
+
+        foodWithMinDist = min(foodStateDict.keys(), key=(lambda k: foodStateDict[k]))
+        totalCost += foodStateDict[foodWithMinDist]
+        currentPosition = foodWithMinDist
+        notVisitedFoodStates.remove(foodWithMinDist)
+        del foodStateDict[foodWithMinDist]
+    return totalCost
+
 
 class ClosestDotSearchAgent(SearchAgent):
     "Search for all food using a sequence of searches"

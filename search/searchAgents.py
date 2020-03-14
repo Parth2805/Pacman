@@ -400,7 +400,6 @@ def cornersHeuristic(state, problem):
             distances.append(dist)
             cornerDict[corner] = dist
 
-        print(cornerDict)
         cornerWithMinDist = min(cornerDict.keys(), key=(lambda k: cornerDict[k]))
         currentPosition = cornerWithMinDist
         totalCost += cornerDict[cornerWithMinDist]
@@ -505,7 +504,7 @@ def foodHeuristic(state, problem):
     Subsequent calls to this heuristic can access
     problem.heuristicInfo['wallCount']
     """
-    position, foodGrid = state
+    # position, foodGrid = state
     "*** YOUR CODE HERE ***"
     currentPosition = state[0]
     foodGrid = state[1]
@@ -531,8 +530,8 @@ def foodHeuristic(state, problem):
     for states in notVisitedFoodStates:
         dist = util.manhattanDistance(currentPosition, states)
         foodStateDict[states] = dist
-    foodWithMinDist = min(foodStateDict.keys(), key=(lambda k: foodStateDict[k]))
 
+    foodWithMinDist = min(foodStateDict.keys(), key=(lambda k: foodStateDict[k]))
     gameState = problem.startingGameState
     distance = mazeDistance(foodWithMinDist, currentPosition, gameState)
     return distance
@@ -566,8 +565,9 @@ class ClosestDotSearchAgent(SearchAgent):
         food = gameState.getFood()
         walls = gameState.getWalls()
         problem = AnyFoodSearchProblem(gameState)
-
-        "*** YOUR CODE HERE ***"
+        return search.breadthFirstSearch(problem)  # Path found with cost 350.
+        # return search.depthFirstSearch(problem) # Path found with cost 5324.
+        # return search.aStarSearch(problem)  # Path found with cost 350.
         util.raiseNotDefined()
 
 
@@ -590,7 +590,6 @@ class AnyFoodSearchProblem(PositionSearchProblem):
         "Stores information from the gameState.  You don't need to change this."
         # Store the food for later reference
         self.food = gameState.getFood()
-
         # Store info for the PositionSearchProblem (no need to change this)
         self.walls = gameState.getWalls()
         self.startState = gameState.getPacmanPosition()
@@ -603,7 +602,11 @@ class AnyFoodSearchProblem(PositionSearchProblem):
         complete the problem definition.
         """
         x, y = state
-
+        return self.food[x][y]
+        if 'T' in self.food:
+            return False
+        else:
+            return True
         "*** YOUR CODE HERE ***"
         util.raiseNotDefined()
 
